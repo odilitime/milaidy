@@ -34,3 +34,4 @@
 
 - Fix for package.json:38 - No verification result returned, treating as failed
 - Fix for package.json:38 - tool modified wrong files (.pr-resolver-state.json), need to modify package.json
+- Fix for package.json:38 - tool modified wrong files (.pr-resolver-state.json, scripts/dev-ui.mjs), need to modify package.json
