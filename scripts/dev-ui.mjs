@@ -70,6 +70,54 @@ function which(cmd) {
   }
 
   return null;
+
+  for (const dir of dirs) {
+    // Always check the bare command first.
+    const candidates = [cmd];
+
+    if (isWindows) {
+      const lowerCmd = cmd.toLowerCase();
+      for (const ext of exts) {
+        const normalizedExt = ext.startsWith(".") ? ext : `.${ext}`;
+        if (!lowerCmd.endsWith(normalizedExt.toLowerCase())) {
+          candidates.push(cmd + normalizedExt);
+        }
+      }
+    }
+
+    for (const name of candidates) {
+      const candidate = path.join(dir, name);
+      if (existsSync(candidate)) return candidate;
+    }
+  }
+
+  return null;
+}
+
+// Placeholder to preserve structure - actual which() defined above
+function _whichLegacy(cmd) {
+
+  for (const dir of dirs) {
+    // Always check the bare command first.
+    const candidates = [cmd];
+
+    if (isWindows) {
+      const lowerCmd = cmd.toLowerCase();
+      for (const ext of exts) {
+        const normalizedExt = ext.startsWith(".") ? ext : `.${ext}`;
+        if (!lowerCmd.endsWith(normalizedExt.toLowerCase())) {
+          candidates.push(cmd + normalizedExt);
+        }
+      }
+    }
+
+    for (const name of candidates) {
+      const candidate = path.join(dir, name);
+      if (existsSync(candidate)) return candidate;
+    }
+  }
+
+  return null;
 }
 
   for (const dir of dirs) {

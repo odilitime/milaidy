@@ -18,6 +18,7 @@
 - Fix for src/runtime/eliza.ts:300 - When a review requests adding a test case, implement the actual test in the test file—don't just add a comment reminder about it.
 - Fix for src/runtime/eliza.ts:300 - When a code change addresses logic, also add test cases that explicitly verify the new behavior and document the intended precedence.
 - Fix for src/runtime/eliza.ts:300 - tool modified wrong files (.pr-resolver-state.json), need to modify src/runtime/eliza.ts
+- Fix for src/runtime/eliza.ts:300 - When modifying logic precedence, add test cases covering the new conditional branch to prevent regressions of the changed behavior.
 
 ### scripts/dev-ui.mjs
 

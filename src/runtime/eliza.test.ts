@@ -71,6 +71,47 @@ describe("collectPluginNames", () => {
     for (const k of envKeys) delete process.env[k];
   });
 
+describe("plugin-local-embedding removal", () => {
+  const originalEnv = process.env;
+
+  beforeEach(() => {
+    process.env = { ...originalEnv };
+  });
+
+  afterEach(() => {
+    process.env = originalEnv;
+  });
+
+  test("removes plugin-local-embedding when a remote model provider env var is set", async () => {
+    // Set an env var that triggers a remote model provider (not ElizaCloud)
+    process.env.OPENAI_API_KEY = "test-key";
+    
+    // Import dynamically to get fresh module state
+    const { resolvePlugins } = await import("./eliza.js");
+    
+    // This test verifies that when a remote provider like OpenAI is configured,
+    // the local embedding plugin is removed to avoid unnecessary resource usage
+    const plugins = await resolvePlugins({});
+    const pluginNames = plugins.map((p: any) => p.name || p);
+    
+    expect(pluginNames).not.toContain("@elizaos/plugin-local-embedding");
+  });
+
+  test("keeps plugin-local-embedding when only ElizaCloud is enabled", async () => {
+    // ElizaCloud is not a model/embedding provider, so local embeddings should remain
+    process.env.ELIZAOS_CLOUD_API_KEY = "test-cloud-key";
+    delete process.env.OPENAI_API_KEY;
+    delete process.env.ANTHROPIC_API_KEY;
+    
+    const { resolvePlugins } = await import("./eliza.js");
+    const plugins = await resolvePlugins({});
+    const pluginNames = plugins.map((p: any) => p.name || p);
+    
+    // Local embedding should still be present since ElizaCloud doesn't provide embeddings
+    expect(pluginNames).toContain("@elizaos/plugin-local-embedding");
+  });
+});
+
 describe("remote provider precedence", () => {
   const originalEnv = process.env;
 
